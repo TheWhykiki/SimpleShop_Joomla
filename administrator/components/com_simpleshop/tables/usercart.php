@@ -83,11 +83,15 @@ class SimpleshopTableUsercart extends JTable
 	{
 
 		$products = $this->_loadAllByProduct($userId);
+		//var_dump($products);
 
 		$db = $this->getDBO();
 
 		$counter = -1;
 		if (is_bool($products)){
+			return false;
+		}
+		else if(empty($products)){
 			return false;
 		}
 		else{
@@ -103,8 +107,39 @@ class SimpleshopTableUsercart extends JTable
 				//die(str_replace('#_', 'jos', $db->getQuery()));
 				$result = $db->loadObject();
 
+				//var_dump($result);
+
+				// Get Title and Product Properties
+				// Count product and set the values in array
+
 				$products[$counter]['produkt_titel'] = $result->produkt_titel;
-				$products[$counter]['produkt_preis'] = $result->produkt_preis;
+				$products[$counter]['produkt_eigenschaften'] = $result->produkt_eigenschaften;
+				$products[$counter]['produkt_eigenschaften_preis'] = $result->produkt_eigenschaften_preis;
+
+				// Make array from properties and price per property
+
+				if(isset($result->produkt_eigenschaften_preis)){
+
+					$preiseArray = explode(",", $result->produkt_eigenschaften_preis);
+					$eigenschaftenArray = explode(",", $result->produkt_eigenschaften);
+					$produkteigenschaftenPreise = array_combine($eigenschaftenArray, $preiseArray);
+
+				}
+
+
+
+				if(isset($result->produkt_eigenschaften) AND isset($result->produkt_eigenschaften_preis)){
+
+					$pricePerProperty = $produkteigenschaftenPreise[$result->produkt_eigenschaft];
+					$products[$counter]['produkt_preis'] = $result->produkt_preis + $pricePerProperty;
+				}
+				else{
+					$products[$counter]['produkt_preis'] = $result->produkt_preis;
+				}
+
+				$products[$counter]['produkt_steuer'] = $products[$counter]['produkt_preis']  * ($result->produkt_steuer/100);
+				$products[$counter]['produkt_preis_mit_steuer'] = $products[$counter]['produkt_preis']  + $products[$counter]['produkt_steuer'];
+				$products[$counter]['produkt_total'] = $products[$counter]['produkt_preis_mit_steuer'] * $products[$counter]['counter'];
 			}
 		}
 
@@ -124,7 +159,7 @@ class SimpleshopTableUsercart extends JTable
 		}
 
 		//Return the array
-
+		//var_dump($products);die;
 		return $products;
 	}
 
@@ -139,6 +174,7 @@ class SimpleshopTableUsercart extends JTable
 		foreach($products as $product){
 			$cartObject->user_id = $product['user_id'];
 			$cartObject->produkt_id= $product['produkt_id'];
+			$cartObject->produkt_eigenschaft = $product['produkt_eigenschaft'];
 			$result = JFactory::getDbo()->insertObject('#__simpleshop_usercart', $cartObject);
 		}
 

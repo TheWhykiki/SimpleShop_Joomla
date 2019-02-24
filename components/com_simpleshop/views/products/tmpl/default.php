@@ -23,13 +23,15 @@ $params = $currentMenuItem->params;
 ?>
 
 <?php if(empty($user->id)): ?>
-<form action="index.php?option=com_simpleshop&view=usercart" method="post">
+<form action="index.php?option=com_simpleshop&view=usercart" method="post" class="submitForm">
 <?php endif; ?>
+<?php if(!empty($params->get('page_heading'))):?>
 <div class="row">
     <div class="col-md-12 shopHeadline">
         <h2><?php echo $params->get('page_heading'); ?></h2>
     </div>
 </div>
+<?php endif; ?>
 <div class="row">
     <div class="col-md-3 sidebar" >
         <div class="cartContainer">

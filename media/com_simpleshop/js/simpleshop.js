@@ -138,10 +138,9 @@ jQuery( document ).ready(function() {
 
 
     jQuery('.btnAddProduct').bind('click', function(event) {
-
-        jQuery('<p class="productAdded">Produkt zum Warenkorb hinzugefügt</p>').hide().appendTo('.shopHeadline').fadeIn(1000);
+        jQuery('<p class="productAdded">Produkt zum Warenkorb hinzugefügt</p>').hide().appendTo('.submitForm').fadeIn(1000);
         jQuery([document.documentElement, document.body]).animate({
-            scrollTop: jQuery(".shopHeadline").offset().top
+            scrollTop: jQuery(".submitForm").offset().top
         }, 500);
 
         setTimeout(function(){
@@ -161,12 +160,13 @@ jQuery( document ).ready(function() {
         // auslesen infos
         var produktID = $button.data('produktid');
         var quantity = jQuery('#menge-' + produktID).val();
+        var eigenschaft = 1;
 
         var isAdded = $button.hasClass('btnDelete');
         var token = jQuery("#token").attr("name");
 
         jQuery.ajax({
-            data: { [token]: "1", task: "ajaxAddProduct", format: "json", produktID: produktID, quantity: quantity},
+            data: { [token]: "1", task: "ajaxAddProduct", format: "json", produktID: produktID, quantity: quantity, eigenschaft: eigenschaft},
             success: function(result) {
                 var tokenKiki = jQuery("#token").attr("name");
 
@@ -225,9 +225,9 @@ jQuery( document ).ready(function() {
     jQuery('.btnDeleteCart').live('click', function(event) {
 
 
-        jQuery('<p class="cartRefreshed">Warenkorb aktualisiert</p>').hide().appendTo('.shopHeadline').fadeIn(1000);
+        jQuery('<p class="cartRefreshed">Warenkorb aktualisiert</p>').hide().appendTo('.submitForm').fadeIn(1000);
         jQuery([document.documentElement, document.body]).animate({
-            scrollTop: jQuery(".shopHeadline").offset().top
+            scrollTop: jQuery(".submitForm").offset().top
         }, 500);
 
         setTimeout(function(){

@@ -86,8 +86,8 @@ class SimpleshopViewSimpleshopcategories extends JViewLegacy
 
 
 		// ... and our own JS and CSS
-		$document->addScript(JURI::root() . "media/com_merkzettel/js/merkzettel.js");
-		$document->addStyleSheet(JURI::root() . "media/com_merkzettel/css/merkzettel.css");
+		$document->addScript(JURI::root() . "media/com_simpleshop/js/simpleshop.js");
+		$document->addStyleSheet(JURI::root() . "media/com_simpleshop/css/simpleshop.css");
 
 		// get the data to pass to our JS code
 

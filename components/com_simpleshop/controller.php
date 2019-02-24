@@ -32,6 +32,7 @@ class SimpleshopController extends JControllerLegacy
 		$jinput = JFactory::getApplication()->input;
 		$produktID = $jinput->get('produktID');
 		$quantity = $jinput->get('quantity');
+		$eigenschaft = $jinput->get('eigenschaft');
 
 		if (!JSession::checkToken('get'))
 		{
@@ -40,7 +41,7 @@ class SimpleshopController extends JControllerLegacy
 		}
 		else
 		{
-			$modelUserCart->storeValuesFromAjax($produktID,$userId ,$quantity);
+			$modelUserCart->storeValuesFromAjax($produktID,$userId ,$quantity, $eigenschaft);
 			$modelUserCart->getUserCart($userId);
 
 			parent::display();

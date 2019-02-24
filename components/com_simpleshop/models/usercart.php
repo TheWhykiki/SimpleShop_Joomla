@@ -156,15 +156,15 @@ class SimpleshopModelUsercart extends JModelItem
 	 * @since   1.6
 	 */
 
-	public function storeValuesFromAjax($produktID,$userId, $quantity)
+	public function storeValuesFromAjax($produktID,$userId, $quantity, $eigenschaft)
 	{
-
 		$table = $this->getTable();
 		$produktValues = [];
 		for ($i = 0; $i <= $quantity - 1; $i++) {
 			$produktValues[$i] = [
 				'user_id' => $userId,
-				'produkt_id' => $produktID
+				'produkt_id' => $produktID,
+				'produkt_eigenschaft' => $eigenschaft
 			];
 		}
 		//var_dump($produktValues);die;

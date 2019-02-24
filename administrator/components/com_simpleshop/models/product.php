@@ -130,6 +130,8 @@ class SimpleshopModelProduct extends JModelAdmin
 			$data['params'] = (string) $params;
 		}
 
+		//TODO: Safe2copy make alias duplication safe
+
 		// Alter the kuenstlername for save as copy
 		if ($input->get('task') === 'save2copy')
 		{

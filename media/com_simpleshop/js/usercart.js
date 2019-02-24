@@ -14,7 +14,6 @@ jQuery( document ).ready(function() {
 /*****************************************************************************/
 
 function getUserCart(params){
-    alert(params);
     var tokenKiki = jQuery("#token").attr("name");
     var ajaxToHtml = '';
     jQuery.ajax({
@@ -28,6 +27,7 @@ function getUserCart(params){
             var summeArray = [];
 
             jQuery.each( result.data, function( key, value ) {
+                console.log(value);
                 differentProducts++;
                 var oddEven;
 

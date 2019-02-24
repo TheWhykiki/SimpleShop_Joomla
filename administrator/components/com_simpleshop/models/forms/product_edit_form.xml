@@ -85,6 +85,17 @@
                 filter="STRING"
         />
 
+        <field
+                name="produkt_eigenschaften_preis"
+                type="textarea"
+                label="Produkt Eigenschaften Preis"
+                description="Hier die Produkteigenschaften angeben"
+                size="40"
+                class="inputbox"
+                default=""
+                filter="STRING"
+        />
+
         <field name="produkt_bild"
                label="Produkt Bild"
                type="media"

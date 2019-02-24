@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="Downloads">
+        <message>Alle Downloads anzeigen</message>
+    </layout>
+
+    <fields
+            name="request"
+            addfieldpath="/administrator/components/com_merkzettel/models/fields"
+    >
+
+        <fieldset name="request">
+            <field
+                    name="test1"
+                    type="merkzettel"
+                    label="COM_HELLOWORLD_HELLOWORLD_FIELD_GREETING_LABEL"
+                    description="COM_HELLOWORLD_HELLOWORLD_FIELD_GREETING_DESC"
+            />
+
+            <field
+                    name="test2"
+                    type="text"
+                    label="test1"
+                    description="COM_HELLOWORLD_HELLOWORLD_FIELD_GREETING_DESC"
+            />
+        </fieldset>
+    </fields>
+</metadata>

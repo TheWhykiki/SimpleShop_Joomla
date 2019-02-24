@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <fieldset
+            name="einstellungen"
+            label="Einstellungen"
+    >
+        <field
+                name="show_title"
+                type="radio"
+                label="Titel anzeigen"
+                default="0"
+        >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+
+        <field
+                name="return_url"
+                type="text"
+                label="Return URL"
+                description="Hier einen Namen für das Produkt angeben"
+                size="40"
+                class="inputbox"
+                default=""
+        />
+    </fieldset>
+</config>

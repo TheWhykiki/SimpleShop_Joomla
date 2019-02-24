@@ -1,0 +1,32 @@
+.allDownloadsList{
+    margin: 0;
+    padding: 0;
+    list-style-type:none;
+}
+
+.allDownloadsSingleDownload{
+    border-bottom: 1px solid #3C5A96;
+    padding: 20px 0px;
+    display:block;
+}
+
+.btnAdd{
+    background: #3C5A96 !important;
+}
+
+.allDownloadsLink{
+    display:block;
+    width: 100%;
+    float:left;
+    margin-bottom: 20px;
+}
+
+.allDownloadsText{
+    margin-bottom: 20px;
+    display:block;
+}
+
+
+.allDownloadsTitle{
+    margin: 0px;
+}

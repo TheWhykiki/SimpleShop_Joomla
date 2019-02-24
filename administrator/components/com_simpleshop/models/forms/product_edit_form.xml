@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset
+            name="details"
+            label="Produkt anlegen"
+    >
+        <field
+                name="id"
+                type="hidden"
+        />
+
+        <field
+                name="alias"
+                type="text"
+                label="JFIELD_ALIAS_LABEL"
+                description="JFIELD_ALIAS_DESC"
+                hint="JFIELD_ALIAS_PLACEHOLDER"
+                size="40"
+        />
+
+        <field
+                name="produkt_titel"
+                type="text"
+                label="Produkt Titel"
+                description="Hier einen Namen für das Produkt angeben"
+                size="40"
+                class="inputbox"
+                default=""
+        />
+
+
+
+        <field
+                name="produkt_beschreibung"
+                type="editor"
+                label="Produktbeschreibung"
+                description="Hier einen Beschreibungstext zum Produkt einfügen"
+                size="40"
+                class="inputbox"
+                default=""
+                filter="RAW"
+        />
+
+        <field
+                name="produkt_preis"
+                type="text"
+                label="Produkt Preis"
+                description="Hier einen Preis für das Produkt angeben"
+                size="40"
+                class="inputbox"
+                default=""
+                filter="STRING"
+        />
+
+        <field
+                name="produkt_steuer"
+                type="text"
+                label="Produkt Steuer"
+                description="Hier die Steuer angeben"
+                size="40"
+                class="inputbox"
+                default=""
+                filter="STRING"
+        />
+
+        <field
+                name="produkt_art"
+                type="textarea"
+                label="Produkt Art"
+                description="Hier die Produktart angeben"
+                size="40"
+                class="inputbox"
+                default=""
+                filter="STRING"
+        />
+
+        <field
+                name="produkt_eigenschaften"
+                type="textarea"
+                label="Produkt Eigenschaften"
+                description="Hier die Produkteigenschaften angeben"
+                size="40"
+                class="inputbox"
+                default=""
+                filter="STRING"
+        />
+
+        <field name="produkt_bild"
+               label="Produkt Bild"
+               type="media"
+               directory="images" />
+
+        <field name="author"
+               type="user"
+               default="current"
+               label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
+        />
+
+        <field
+                name="catid"
+                type="category"
+                extension="com_simpleshop
+
+"
+                class="inputbox"
+                default=""
+                label="Kategorie auswählen"
+                description="COM_HELLOWORLD_HELLOWORLD_FIELD_CATID_DESC"
+                required="true"
+        />
+    </fieldset>
+    <fields name="params">
+        <fieldset
+                name="params"
+                label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
+        >
+            <field
+                    name="show_title"
+                    type="list"
+                    label="Titel anzeigen"
+                    default=""
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+        </fieldset>
+    </fields>
+
+</form>

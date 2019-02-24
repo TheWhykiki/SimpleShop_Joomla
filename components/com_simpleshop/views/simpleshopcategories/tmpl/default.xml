@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="Produkte Kategorie">
+        <message>Produkte einer bestimmten Kategorie anzeigen</message>
+    </layout>
+
+        <fields name="request">
+            <fieldset name="request">
+                <field name="category" type="category" extension="com_simpleshop
+
+" label="Kategorie auswählen" description="" />
+            </fieldset>
+        </fields>
+
+</metadata>

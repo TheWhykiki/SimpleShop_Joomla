@@ -121,8 +121,6 @@ class SimpleshopTableUsercart extends JTable
 
 				// Make array from properties and price per property
 
-
-
 				if(isset($result->produkt_eigenschaften_preis)){
 
 					$preiseArray = explode(",", $result->produkt_eigenschaften_preis);
@@ -227,15 +225,17 @@ class SimpleshopTableUsercart extends JTable
 	// Refresh products in cart
 	/*****************************************************************************/
 
-	public function refreshProducts($products, $userId, $produktID){
+	public function refreshProducts($products, $userId, $produktID, $produktEigenschaft){
 
 		$db = $this->getDBO();
 		$query = $db->getQuery(true);
 		$query
 			->delete('#__simpleshop_usercart')
 			->where($db->quoteName('user_id') . ' = '. $userId)
-			->where($db->quoteName('produkt_id') . ' = '. $produktID);
+			->where($db->quoteName('produkt_id') . ' = '. $produktID)
+			->where($db->quoteName('produkt_eigenschaft') . ' = "'.$produktEigenschaft.'"');
 		$db->setQuery($query);
+		//die(str_replace('#_', 'lj40r', $db->getQuery()));
 		$db->execute();
 
 		$cartObject = new stdClass();
@@ -243,6 +243,7 @@ class SimpleshopTableUsercart extends JTable
 		foreach($products as $product){
 			$cartObject->user_id = $product['user_id'];
 			$cartObject->produkt_id= $product['produkt_id'];
+			$cartObject->produkt_eigenschaft = $produktEigenschaft;
 			$result = JFactory::getDbo()->insertObject('#__simpleshop_usercart', $cartObject);
 		}
 

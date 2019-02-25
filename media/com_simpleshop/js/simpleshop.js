@@ -102,26 +102,11 @@ jQuery( document ).ready(function() {
             var gesamtsummeCart = 0;
             var html = '<h3>Warenkorb</h3><ul class="cartlist">';
             jQuery.each( result.data, function( key, value ) {
-                var sammelpreis = parseFloat(value.produkt_preis) * parseInt(value.counter);
-                html += '<li class="cartProduct">';
-                html += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ')' + value.produkt_eigenschaft + ' </h4>';
-                html += '   <div class="btnWrapper">';
-                html += '       <input id="deleteID-'+ value.produkt_id + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
-                html += '       <button data-produktid="' + value.produkt_id + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-sync-alt"></i></button>';
-                html += '   </div>';
-                html += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis).toFixed(2) + 'EUR</p>';
-                html += '   <p><strong>Summe: </strong>' + parseFloat(sammelpreis).toFixed(2) + ' EUR</p>';
-                html += '</li>';
-
-                gesamtsummeCart = parseFloat(gesamtsummeCart) + parseFloat(sammelpreis);
-
-                console.log(value.produkt_id)
+               html += getCartHTML(value);
             });
 
-
             html += '<li>';
-            html += '<p><strong>Warenkorb Gesamt: </strong>' + parseFloat(gesamtsummeCart).toFixed(2) + ' EUR</p>';
-            html += '</li>';
+            html += '<p><strong>Warenkorb Gesamt: </strong>' + parseFloat(gesamtsummeCart).toFixed(2) + ' EUR</p>';html += '</li>';
             html += '</ul>';
             jQuery('#cart').html(html);
 
@@ -131,6 +116,28 @@ jQuery( document ).ready(function() {
             console.log('ajax call failed');
         }
     });
+
+    /******************************************************************************/
+    // HTML Structure for every product added to cart
+    /*****************************************************************************/
+
+    function getCartHTML(value){
+        var html;
+        var sammelpreis = parseFloat(value.produkt_preis) * parseInt(value.counter);
+        html += '<li class="cartProduct">';
+        html += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ')' + value.produkt_eigenschaft + ' </h4>';
+        html += '   <div class="btnWrapper">';
+        html += '       <input id="deleteEigenschaft-'+ value.produkt_id + '" class="deleteProduct" name="deleteProductEigenschaft" value="' + value.produkt_eigenschaft + '">';
+        html += '       <input id="deleteID-'+ value.produkt_id + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
+        html += '       <button data-produktid="' + value.produkt_id + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-sync-alt"></i></button>';
+        html += '   </div>';
+        html += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis).toFixed(2) + 'EUR</p>';
+        html += '   <p><strong>Summe: </strong>' + parseFloat(sammelpreis).toFixed(2) + ' EUR</p>';
+        html += '</li>';
+
+        return html;
+
+    };
 
     /******************************************************************************/
     // Add product to cart
@@ -179,20 +186,7 @@ jQuery( document ).ready(function() {
                         var html = '<h3>Warenkorb</h3><ul class="cartlist">';
                         var gesamtsummeCart = 0;
                         jQuery.each( result.data, function( key, value ) {
-                            var sammelpreis = parseFloat(value.produkt_preis) * parseInt(value.counter);
-                            html += '<li class="cartProduct">';
-                            html += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ') </h4>';
-                            html += '   <div class="btnWrapper">';
-                            html += '       <input id="deleteID-'+ value.produkt_id + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
-                            html += '       <button data-produktid="' + value.produkt_id + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-sync-alt"></i></button>';
-                            html += '   </div>';
-                            html += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis).toFixed(2) + ' EUR</p>';
-                            html += '   <p><strong>Summe: </strong>' + parseFloat(sammelpreis).toFixed(2) + ' EUR</p>';
-                            html += '</li>';
-
-                            gesamtsummeCart = parseFloat(gesamtsummeCart) + parseFloat(sammelpreis);
-
-                            console.log(value.produkt_id)
+                            html += getCartHTML(value);
                         });
 
                         html += '<li>';
@@ -247,11 +241,12 @@ jQuery( document ).ready(function() {
         // auslesen infos
         var produktID = $button.data('produktid');
         var quantity = jQuery('#deleteID-' + produktID).val();
+        var produktEigenschaft =  jQuery('#deleteEigenschaft-' + produktID).val();
 
         var token = jQuery("#token").attr("name");
 
         jQuery.ajax({
-            data: { [token]: "1", task: "ajaxRefreshCart", format: "json", produktID: produktID, quantity: quantity},
+            data: { [token]: "1", task: "ajaxRefreshCart", format: "json", produktID: produktID, quantity: quantity, produktEigenschaft: produktEigenschaft},
             success: function(result) {
                 $button.find('span').text($button.data('messageremove'));
 
@@ -266,20 +261,7 @@ jQuery( document ).ready(function() {
                         var gesamtsummeCart = 0;
                         var html = '<h3>Warenkorb</h3><ul class="cartlist">';
                         jQuery.each( result.data, function( key, value ) {
-                            var sammelpreis = parseFloat(value.produkt_preis) * parseInt(value.counter);
-                            html += '<li class="cartProduct">';
-                            html += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ') </h4>';
-                            html += '   <div class="btnWrapper">';
-                            html += '       <input id="deleteID-'+ value.produkt_id + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
-                            html += '       <button data-produktid="' + value.produkt_id + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-sync-alt"></i></button>';
-                            html += '   </div>';
-                            html += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis).toFixed(2) + ' EUR</p>';
-                            html += '   <p><strong>Summe: </strong>' + parseFloat(sammelpreis).toFixed(2) + ' EUR</p>';
-                            html += '</li>';
-
-                            gesamtsummeCart = parseFloat(gesamtsummeCart) + parseFloat(sammelpreis);
-
-                            console.log(value.produkt_id)
+                            html += getCartHTML(value);
                         });
 
                         html += '<li>';

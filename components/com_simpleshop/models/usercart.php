@@ -254,7 +254,7 @@ class SimpleshopModelUsercart extends JModelItem
 	/*****************************************************************************/
 
 
-	public function refreshValuesFromAjax($userId, $quantity, $produktID)
+	public function refreshValuesFromAjax($userId, $quantity, $produktID, $produktEigenschaft)
 	{
 
 		$table = $this->getTable();
@@ -262,11 +262,12 @@ class SimpleshopModelUsercart extends JModelItem
 		for ($i = 0; $i <= $quantity - 1; $i++) {
 			$produktValues[$i] = [
 				'user_id' => $userId,
-				'produkt_id' => $produktID
+				'produkt_id' => $produktID,
+				'produkt_eigenschaft' => $produktEigenschaft
 			];
 		}
 
-		return $table->refreshProducts($produktValues, $userId, $produktID);
+		return $table->refreshProducts($produktValues, $userId, $produktID, $produktEigenschaft);
 	}
 
 }

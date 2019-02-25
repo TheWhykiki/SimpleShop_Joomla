@@ -35,6 +35,7 @@ $params = $currentMenuItem->params;
 <div class="row">
     <div class="col-md-3 sidebar" >
         <div class="cartContainer">
+
         </div>
 	    <?php if(empty($user->id)): ?>
             <button type="submit" class="btn btn-success btnSubmitCartGuest buttonHide submitCart"><?php echo JText::_('COM_SIMPLESHOP_SEND_ORDER'); ?> <i class="fa fa-share-square"></i></button>

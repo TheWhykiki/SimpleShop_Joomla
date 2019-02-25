@@ -63,6 +63,7 @@ class SimpleshopController extends JControllerLegacy
 		$jinput = JFactory::getApplication()->input;
 		$produktID = $jinput->get('produktID');
 		$quantity = $jinput->get('quantity');
+		$produktEigenschaft = $jinput->get('produktEigenschaft');
 
 		if (!JSession::checkToken('get'))
 		{
@@ -71,7 +72,7 @@ class SimpleshopController extends JControllerLegacy
 		}
 		else
 		{
-			$modelUserCart->refreshValuesFromAjax($userId, $quantity, $produktID);
+			$modelUserCart->refreshValuesFromAjax($userId, $quantity, $produktID,$produktEigenschaft);
 			parent::display();
 		}
 	}

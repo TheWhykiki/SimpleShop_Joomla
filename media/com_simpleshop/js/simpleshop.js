@@ -96,7 +96,6 @@ jQuery( document ).ready(function() {
         success: function(result) {
             //console.log(result.data[0]);
 
-
             addOrRemoveCart(result.data.length);
 
             var gesamtsummeCart = 0;
@@ -122,22 +121,60 @@ jQuery( document ).ready(function() {
     /*****************************************************************************/
 
     function getCartHTML(value){
-        var html;
+         var htmlStructure;
         var sammelpreis = parseFloat(value.produkt_preis) * parseInt(value.counter);
-        html += '<li class="cartProduct">';
-        html += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ')' + value.produkt_eigenschaft + ' </h4>';
-        html += '   <div class="btnWrapper">';
-        html += '       <input id="deleteEigenschaft-'+ value.produkt_id + '" class="deleteProduct" name="deleteProductEigenschaft" value="' + value.produkt_eigenschaft + '">';
-        html += '       <input id="deleteID-'+ value.produkt_id + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
-        html += '       <button data-produktid="' + value.produkt_id + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-sync-alt"></i></button>';
-        html += '   </div>';
-        html += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis).toFixed(2) + 'EUR</p>';
-        html += '   <p><strong>Summe: </strong>' + parseFloat(sammelpreis).toFixed(2) + ' EUR</p>';
-        html += '</li>';
+        htmlStructure  = '<li class="cartProduct">';
+        htmlStructure += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ')' +  ' </h4>';
+        htmlStructure += '   <span class="cartProductProperty">'  + value.produkt_eigenschaft + ' </span>';
+        htmlStructure += '   <div class="btnWrapper">';
+        htmlStructure += '       <input id="deleteID-'+ value.produkt_id + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
+        htmlStructure += '       <button data-produktid="' + value.produkt_id + '" data-produkteigenschaft="' + value.produkt_eigenschaft + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-sync-alt"></i></button>';
+        htmlStructure += '   </div>';
+        htmlStructure += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis_mit_steuer).toFixed(2) + 'EUR</p>';
+        htmlStructure += '   <p><strong>Summe: </strong>' + parseFloat(value.produkt_total).toFixed(2) + 'EUR</p>';
+        //html += '   <p><strong>Summe: </strong>' + parseFloat(sammelpreis).toFixed(2) + ' EUR</p>';
+        htmlStructure += '</li>';
 
-        return html;
+        return htmlStructure;
 
     };
+
+    /******************************************************************************/
+    // Refrserh product price on property change
+    /*****************************************************************************/
+
+    function refreshProductPrice(produktID, eigenschaft){
+
+        jQuery.ajax({
+            data: { [token]: "1", task: "ajaxAddProduct", format: "json", produktID: produktID,  eigenschaft: eigenschaft},
+            success: function(result) {
+                var tokenKiki = jQuery("#token").attr("name");
+
+                jQuery.ajax({
+                    data: { [tokenKiki]: "1", task: "getProductProperties", format: "json"},
+                    success: function(result) {
+
+                        alert();},
+                    error: function(e) {
+                        console.log(e);
+                        console.log('ajax call failed');
+                    }
+                });
+
+                console.log($button);
+            },
+            error: function(e) {
+                console.log(e);
+                console.log('ajax call failed');
+            }
+        });
+
+    }
+
+    jQuery('select').on('change',function(){
+        var id = jQuery(this).closest( "button" ).attr('id');
+        alert(id);
+    });
 
     /******************************************************************************/
     // Add product to cart
@@ -167,7 +204,9 @@ jQuery( document ).ready(function() {
         // auslesen infos
         var produktID = $button.data('produktid');
         var quantity = jQuery('#menge-' + produktID).val();
-        var eigenschaft = jQuery('#produkt_eigenschaften' + + produktID + ' option:selected').text();
+        var eigenschaft = jQuery('#produkt_eigenschaften' +  produktID + ' option:selected').text();
+
+
 
         var isAdded = $button.hasClass('btnDelete');
         var token = jQuery("#token").attr("name");
@@ -241,7 +280,8 @@ jQuery( document ).ready(function() {
         // auslesen infos
         var produktID = $button.data('produktid');
         var quantity = jQuery('#deleteID-' + produktID).val();
-        var produktEigenschaft =  jQuery('#deleteEigenschaft-' + produktID).val();
+        var produktEigenschaft = $button.data('produkteigenschaft');
+        //alert(produktEigenschaft);
 
         var token = jQuery("#token").attr("name");
 

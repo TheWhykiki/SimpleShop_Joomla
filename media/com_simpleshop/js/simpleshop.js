@@ -104,7 +104,7 @@ jQuery( document ).ready(function() {
             jQuery.each( result.data, function( key, value ) {
                 var sammelpreis = parseFloat(value.produkt_preis) * parseInt(value.counter);
                 html += '<li class="cartProduct">';
-                html += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ') </h4>';
+                html += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ')' + value.produkt_eigenschaft + ' </h4>';
                 html += '   <div class="btnWrapper">';
                 html += '       <input id="deleteID-'+ value.produkt_id + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
                 html += '       <button data-produktid="' + value.produkt_id + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-sync-alt"></i></button>';
@@ -160,7 +160,7 @@ jQuery( document ).ready(function() {
         // auslesen infos
         var produktID = $button.data('produktid');
         var quantity = jQuery('#menge-' + produktID).val();
-        var eigenschaft = 1;
+        var eigenschaft = jQuery('#produkt_eigenschaften' + + produktID + ' option:selected').text();
 
         var isAdded = $button.hasClass('btnDelete');
         var token = jQuery("#token").attr("name");

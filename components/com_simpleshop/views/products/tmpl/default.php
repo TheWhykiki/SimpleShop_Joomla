@@ -66,6 +66,14 @@ $params = $currentMenuItem->params;
                 <div class="orderContainer">
                     <input type="hidden" id="hiddenID-<?php echo $produkt->id;?>" value="<?php echo $produkt->id;?>">
                     <input type="text" name=menge" class="menge" id="menge-<?php echo $produkt->id;?>" value="">
+	                <?php if(isset($produkt->produkt_eigenschaften)): ?>
+		                <?php $produktEigenschaften = explode(",", $produkt->produkt_eigenschaften);?>
+                        <select name="produkt_eigenschaften" id="produkt_eigenschaften<?php echo $produkt->id;?>">
+			                <?php foreach($produktEigenschaften as $eigenschaft): ?>
+                                <option value="<?php echo $eigenschaft; ?>"><?php echo $eigenschaft; ?></option>
+			                <?php endforeach; ?>
+                        </select>
+	                <?php endif; ?>
                     <button
                             class="btnAddProduct btn btnAdd btn-primary"
                             id="buttonAdd-<?php echo $produkt->id;?>"

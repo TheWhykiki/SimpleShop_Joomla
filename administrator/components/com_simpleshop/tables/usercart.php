@@ -55,11 +55,13 @@ class SimpleshopTableUsercart extends JTable
 		$db = $this->getDBO();
 		$query = $db->getQuery(true);
 		$query
-			->select( array('produkt_id', 'COUNT(*) as counter') )
+			->select( array('*', 'COUNT(*) as counter') )
 			->from($db->quoteName('#__simpleshop_usercart'))
 			->where($db->quoteName('user_id') . ' = '. $userId)
-			->group($db->quoteName('produkt_id'));
+			->group($db->quoteName('produkt_id'))
+			->group($db->quoteName('produkt_eigenschaft'));
 		$db->setQuery($query);
+		//die(str_replace('#_', 'lj40r', $db->getQuery()));
 		$results = $db->loadAssocList();
 
 		if ($db->getErrorNum())
@@ -83,6 +85,7 @@ class SimpleshopTableUsercart extends JTable
 	{
 
 		$products = $this->_loadAllByProduct($userId);
+		//var_dump($products);die;
 		//var_dump($products);
 
 		$db = $this->getDBO();
@@ -96,18 +99,18 @@ class SimpleshopTableUsercart extends JTable
 		}
 		else{
 			foreach($products as $product){
+				//var_dump($product);
 				$counter++;
 				$query = $db->getQuery(true);
 				$query
 					->select(array('a.*,b.*'))
-					->from($db->quoteName('#__simpleshop_usercart', 'a'))
-					->join('INNER', $db->quoteName('#__simpleshop', 'b') . ' ON (' . $db->quoteName('a.produkt_id') . ' = ' . $db->quoteName('b.id') . ')')
-					->where($db->quoteName('b.id') . ' =  '. $product['produkt_id']);
+					->from($db->quoteName('#__simpleshop','a'))
+					->join('INNER', $db->quoteName('#__simpleshop_usercart', 'b') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('b.produkt_id') . ')')
+					->where($db->quoteName('a.id') . ' =  '. $product['produkt_id']);
 				$db->setQuery($query);
-				//die(str_replace('#_', 'jos', $db->getQuery()));
+				//die(str_replace('#_', 'lj40r', $db->getQuery()));
 				$result = $db->loadObject();
 
-				//var_dump($result);
 
 				// Get Title and Product Properties
 				// Count product and set the values in array
@@ -118,6 +121,8 @@ class SimpleshopTableUsercart extends JTable
 
 				// Make array from properties and price per property
 
+
+
 				if(isset($result->produkt_eigenschaften_preis)){
 
 					$preiseArray = explode(",", $result->produkt_eigenschaften_preis);
@@ -126,20 +131,23 @@ class SimpleshopTableUsercart extends JTable
 
 				}
 
-
-
 				if(isset($result->produkt_eigenschaften) AND isset($result->produkt_eigenschaften_preis)){
 
-					$pricePerProperty = $produkteigenschaftenPreise[$result->produkt_eigenschaft];
+					$pricePerProperty = $produkteigenschaftenPreise[$product['produkt_eigenschaft']];
 					$products[$counter]['produkt_preis'] = $result->produkt_preis + $pricePerProperty;
+					//var_dump($products[$counter]['produkt_preis']);
 				}
 				else{
 					$products[$counter]['produkt_preis'] = $result->produkt_preis;
 				}
 
+
+
 				$products[$counter]['produkt_steuer'] = $products[$counter]['produkt_preis']  * ($result->produkt_steuer/100);
 				$products[$counter]['produkt_preis_mit_steuer'] = $products[$counter]['produkt_preis']  + $products[$counter]['produkt_steuer'];
 				$products[$counter]['produkt_total'] = $products[$counter]['produkt_preis_mit_steuer'] * $products[$counter]['counter'];
+
+
 			}
 		}
 
@@ -159,7 +167,6 @@ class SimpleshopTableUsercart extends JTable
 		}
 
 		//Return the array
-		//var_dump($products);die;
 		return $products;
 	}
 

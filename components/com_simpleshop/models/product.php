@@ -85,6 +85,20 @@ class SimpleshopModelProduct extends JModelItem
 		return $item;
 	}
 
+	/******************************************************************************/
+	// Get product properties
+	/*****************************************************************************/
+
+	public function getProductProperties($produktID){
+		$table = $this->getTable();
+		return $table->loadSingle($produktID);
+	}
+
+	public function getProductPriceData($produktID){
+		$table = $this->getTable();
+		return $table->loadSingle($produktID);
+	}
+
 	public function getMsg()
 	{
 		if (!isset($this->message))

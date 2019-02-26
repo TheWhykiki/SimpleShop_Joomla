@@ -139,6 +139,42 @@ class SimpleshopModelUsercart extends JModelItem
 		return $table->loadAllByUser($userID);
 	}
 
+	/******************************************************************************/
+	// Get current user cart
+	/*****************************************************************************/
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $type    The table name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 *
+	 * @since   1.6
+	 */
+
+	public function getUserCartValue()
+	{
+
+		$userID = $this->_getUserID();
+
+		// Get a TableHelloWorld instance
+		$table = $this->getTable();
+		$cart = $table->loadAllByUser($userID);
+
+		$cartValue;
+
+		foreach($cart as $cartItem){
+			$cartValue = $cartValue + $cartItem->produkt_total;
+		}
+
+		// Load all downloads
+
+		return $cartValue;
+	}
+
 
 	/******************************************************************************/
 	// Save cart values from ajax call
@@ -193,10 +229,13 @@ class SimpleshopModelUsercart extends JModelItem
 		return $date = date("Y-m-d H:i:s");
 	}
 
+
 	public function sendOrderMail(){
 
 		$table = $this->getTable();
 		$date = $this->_getDate();
+
+		$cartTotal = $this->getUserCartValue();
 
 		$userID = $this->_getUserID();
 		$orderID = $table->getOrderID($date,$userID);

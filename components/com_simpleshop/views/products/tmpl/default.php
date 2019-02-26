@@ -61,9 +61,12 @@ $params = $currentMenuItem->params;
                 </a>
 
                 <img src="<?php echo $produkt->produkt_bild; ?>" class="webshopImage">
-
-                <p class="produktPreis"><?php echo str_replace('.',',',$produkt->produkt_preis); ?> <?php echo JText::_('COM_SIMPLESHOP_CURRENCY'); ?></p>
-
+                <?php
+                    $produktPreisTax = $produkt->produkt_preis + ($produkt->produkt_preis * $produkt->produkt_steuer/100);
+                    $produktPreisTax =  number_format((float)$produktPreisTax, 2, ',', '.');
+                ?>
+                <span class="produktPreis productPrice<?php echo $produkt->id;?>"><?php echo $produktPreisTax; ?> <?php echo JText::_('COM_SIMPLESHOP_CURRENCY'); ?></span>
+                <span class="produktSteuer"><?php echo JText::_('COM_SIMPLESHOP_TAX_INCLUDE').' '.$produkt->produkt_steuer.' '.JText::_('COM_SIMPLESHOP_TAX_ART'); ?> </span>
                 <div class="orderContainer">
                     <input type="hidden" id="hiddenID-<?php echo $produkt->id;?>" value="<?php echo $produkt->id;?>">
                     <input type="text" name=menge" class="menge" id="menge-<?php echo $produkt->id;?>" value="">

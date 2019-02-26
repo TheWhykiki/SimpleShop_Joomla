@@ -164,6 +164,7 @@ class SimpleshopTableUsercart extends JTable
 			return false;
 		}
 
+		//var_dump($products);
 		//Return the array
 		return $products;
 	}

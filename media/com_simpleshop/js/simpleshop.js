@@ -4,14 +4,15 @@ jQuery( document ).ready(function() {
     // Get Parameters from Joomla
 
 
-    /*
+
     const params = Joomla.getOptions('params');
+
+    /*
 
     jQuery.each(params, function (index, value) {
         console.log(value.download_id);
         setButtonDisabled(value.download_id);
     });
-
 
 
     /******************************************************************************/
@@ -105,7 +106,7 @@ jQuery( document ).ready(function() {
             });
 
             html += '<li>';
-            html += '<p><strong>Warenkorb Gesamt: </strong>' + parseFloat(gesamtsummeCart).toFixed(2) + ' EUR</p>';html += '</li>';
+            html += '<p><strong>Warenkorb Gesamt: </strong>' + parseFloat(gesamtsummeCart).toFixed(2) +  params.currency + '</p>';html += '</li>';
             html += '</ul>';
             jQuery('#cart').html(html);
 
@@ -127,11 +128,11 @@ jQuery( document ).ready(function() {
         htmlStructure += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ')' +  ' </h4>';
         htmlStructure += '   <span class="cartProductProperty">'  + value.produkt_eigenschaft + ' </span>';
         htmlStructure += '   <div class="btnWrapper">';
-        htmlStructure += '       <input id="deleteID-'+ value.produkt_id + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
+        htmlStructure += '       <input id="deleteID-'+ value.produkt_id + '-' + value.produkt_eigenschaft + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
         htmlStructure += '       <button data-produktid="' + value.produkt_id + '" data-produkteigenschaft="' + value.produkt_eigenschaft + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-sync-alt"></i></button>';
         htmlStructure += '   </div>';
-        htmlStructure += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis_mit_steuer).toFixed(2) + 'EUR</p>';
-        htmlStructure += '   <p><strong>Summe: </strong>' + parseFloat(value.produkt_total).toFixed(2) + 'EUR</p>';
+        htmlStructure += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis_mit_steuer).toFixed(2) + params.currency + '</p>';
+        htmlStructure += '   <p><strong>Summe: </strong>' + parseFloat(value.produkt_total).toFixed(2) + params.currency + '</p>';
         //html += '   <p><strong>Summe: </strong>' + parseFloat(sammelpreis).toFixed(2) + ' EUR</p>';
         htmlStructure += '</li>';
 
@@ -146,22 +147,27 @@ jQuery( document ).ready(function() {
     function refreshProductPrice(produktID, eigenschaft){
 
         jQuery.ajax({
-            data: { [token]: "1", task: "ajaxAddProduct", format: "json", produktID: produktID,  eigenschaft: eigenschaft},
+            data: { [tokenKiki]: "1", task: "getProductProperties", format: "json", produktID: produktID},
             success: function(result) {
-                var tokenKiki = jQuery("#token").attr("name");
 
-                jQuery.ajax({
-                    data: { [tokenKiki]: "1", task: "getProductProperties", format: "json"},
-                    success: function(result) {
+                var productPrice = parseInt(result.data.produkt_preis);
+                var productTax = parseInt(result.data.produkt_steuer);
 
-                        alert();},
-                    error: function(e) {
-                        console.log(e);
-                        console.log('ajax call failed');
+                //alert(productPrice);
+
+                jQuery.each( result.data.produkt_eigenschaften, function( key, value ) {
+                    if(key == eigenschaft){
+                        priceDiv = jQuery('.productPrice' + produktID);
+                        taxDiv = jQuery('.taxValue' + produktID);
+                        price = parseInt(productPrice) + parseInt(value);
+                        tester = parseInt(productTax);
+                        priceTax = price * (parseFloat(productTax/100));
+                        priceWithTax = price + priceTax;
+                        priceDiv.text(priceWithTax.toFixed(2) + ' ' + params.currency);
+
                     }
-                });
 
-                console.log($button);
+                });
             },
             error: function(e) {
                 console.log(e);
@@ -172,8 +178,9 @@ jQuery( document ).ready(function() {
     }
 
     jQuery('select').on('change',function(){
-        var id = jQuery(this).closest( "button" ).attr('id');
-        alert(id);
+        var eigenschaft = jQuery(this).val();
+        var id = jQuery(this).next( "button" ).attr('data-produktid');
+        refreshProductPrice(id, eigenschaft);
     });
 
     /******************************************************************************/
@@ -279,8 +286,8 @@ jQuery( document ).ready(function() {
 
         // auslesen infos
         var produktID = $button.data('produktid');
-        var quantity = jQuery('#deleteID-' + produktID).val();
         var produktEigenschaft = $button.data('produkteigenschaft');
+        var quantity = jQuery('#deleteID-' + produktID + '-' + produktEigenschaft).val();
         //alert(produktEigenschaft);
 
         var token = jQuery("#token").attr("name");

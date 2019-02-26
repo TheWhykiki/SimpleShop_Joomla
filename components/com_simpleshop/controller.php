@@ -102,6 +102,47 @@ class SimpleshopController extends JControllerLegacy
 	}
 
 	/******************************************************************************/
+	// Get product properties
+	/*****************************************************************************/
+
+
+	public function getProductProperties()
+	{
+
+		$modelProduct = $this->getModel('product');
+
+		$jinput = JFactory::getApplication()->input;
+		$produktID = $jinput->get('produktID');
+
+		if (!JSession::checkToken('get'))
+		{
+
+			echo new JResponseJson(null, JText::_('JINVALID_TOKEN'), true);
+		}
+		else
+		{
+			$modelProduct->getProductProperties($produktID);
+			$produkt = $modelProduct->getProductProperties($produktID);
+			//var_dump($produkt);die;
+			$produktEigenschaften = explode(",", $produkt[0]->produkt_eigenschaften);
+			$produktEigenschaftenPreise = explode(",", $produkt[0]->produkt_eigenschaften_preis);
+			$productProperties = array();
+			$productProperties = array_combine($produktEigenschaften, $produktEigenschaftenPreise);
+
+			$newProperties = array(
+				'produkt_preis' => $produkt[0]->produkt_preis,
+				'produkt_steuer' => $produkt[0]->produkt_steuer,
+				'produkt_eigenschaften' => $productProperties
+			);
+
+			//var_dump($newProperties);die;
+
+			echo new JResponseJson($newProperties,true, false);
+
+		}
+	}
+
+	/******************************************************************************/
 	// Save order data from ajax
 	/*****************************************************************************/
 

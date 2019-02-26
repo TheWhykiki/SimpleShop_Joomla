@@ -62,23 +62,18 @@ class SimpleshopViewProducts extends JViewLegacy
 		// everything's dependent upon JQuery
 		JHtml::_('jquery.framework');
 
-
-
 		// ... and our own JS and CSS
-		$document->addScript(JURI::root() . "media/com_simpleshop
-
-/js/simpleshop.js");
-		$document->addStyleSheet(JURI::root() . "media/com_simpleshop
-
-/css/simpleshop.css");
+		$document->addScript(JURI::root() . "media/com_simpleshop/js/simpleshop.js");
+		$document->addStyleSheet(JURI::root() . "media/com_simpleshop/css/simpleshop.css");
 
 		// get the data to pass to our JS code
+		$jsParams = array(
+			'currency' => JText::_('COM_SIMPLESHOP_CURRENCY'),
+			'total' => JText::_('COM_SIMPLESHOP_TOTAL'),
+			'tax_art' => JText::_('COM_SIMPLESHOP_TAX_ART'),
+			'tax_includes' => JText::_('COM_SIMPLESHOP_TAX_INCLUDE'),
 
-		$jsParams = $this->get("UserDownloads");
-
-
-
-
+		);
 
 		//Kint::dump($jsParams);
 		$document->addScriptOptions('params', $jsParams);

@@ -1,0 +1,7 @@
+- Route anpassen für Cart und Bestellung -> parsing
+- Fix anpassen, dass kein Alias doppelt vergeben werden darf
+- Bestellübersicht anpassen -> Stsuer usw ausgeben
+- Mail anpassen -> Steuer
+- Order anpassen -> Steuer
+
+- Testen und fixen bei Produkt ohne Eigenschaft -> if

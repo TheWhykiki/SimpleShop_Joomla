@@ -64,7 +64,9 @@ class SimpleshopViewProducts extends JViewLegacy
 
 		// ... and our own JS and CSS
 		$document->addScript(JURI::root() . "media/com_simpleshop/js/simpleshop.js");
+		$document->addScript(JURI::root() . "media/com_simpleshop/js/fontawesome.min.js");
 		$document->addStyleSheet(JURI::root() . "media/com_simpleshop/css/simpleshop.css");
+		$document->addStyleSheet(JURI::root() . "media/com_simpleshop/css/all.min.css");
 
 		// get the data to pass to our JS code
 		$jsParams = array(

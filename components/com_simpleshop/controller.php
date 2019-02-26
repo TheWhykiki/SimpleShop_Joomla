@@ -78,6 +78,33 @@ class SimpleshopController extends JControllerLegacy
 	}
 
 	/******************************************************************************/
+	// Remove product cart ajax
+	/*****************************************************************************/
+
+	public function ajaxRemoveProduct()
+	{
+
+		$modelUserCart = $this->getModel('usercart');
+		$userId = $this->_getUserId();
+
+		$jinput = JFactory::getApplication()->input;
+		$produktID = $jinput->get('produktID');
+		$quantity = $jinput->get('quantity');
+		$produktEigenschaft = $jinput->get('produktEigenschaft');
+
+		if (!JSession::checkToken('get'))
+		{
+
+			echo new JResponseJson(null, JText::_('JINVALID_TOKEN'), true);
+		}
+		else
+		{
+			$modelUserCart->removeProductFromCard($userId, $quantity, $produktID,$produktEigenschaft);
+			parent::display();
+		}
+	}
+
+	/******************************************************************************/
 	// Show user cart ajax
 	/*****************************************************************************/
 

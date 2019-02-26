@@ -309,4 +309,17 @@ class SimpleshopModelUsercart extends JModelItem
 		return $table->refreshProducts($produktValues, $userId, $produktID, $produktEigenschaft);
 	}
 
+	/******************************************************************************/
+	// Remove product from card
+	/*****************************************************************************/
+
+
+	public function removeProductFromCard($userId, $quantity, $produktID, $produktEigenschaft)
+	{
+
+		$table = $this->getTable();
+
+		return $table->removeProduct($userId, $produktID, $produktEigenschaft);
+	}
+
 }

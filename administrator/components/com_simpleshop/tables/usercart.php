@@ -251,6 +251,24 @@ class SimpleshopTableUsercart extends JTable
 	}
 
 	/******************************************************************************/
+	// Remove product from card
+	/*****************************************************************************/
+
+	public function removeProduct($userId, $produktID, $produktEigenschaft){
+
+		$db = $this->getDBO();
+		$query = $db->getQuery(true);
+		$query
+			->delete('#__simpleshop_usercart')
+			->where($db->quoteName('user_id') . ' = '. $userId)
+			->where($db->quoteName('produkt_id') . ' = '. $produktID)
+			->where($db->quoteName('produkt_eigenschaft') . ' = "'.$produktEigenschaft.'"');
+		$db->setQuery($query);
+		//die(str_replace('#_', 'lj40r', $db->getQuery()));
+		$db->execute();
+	}
+
+	/******************************************************************************/
 	// Delete usercart
 	/*****************************************************************************/
 

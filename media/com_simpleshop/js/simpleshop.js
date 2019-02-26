@@ -14,6 +14,10 @@ jQuery( document ).ready(function() {
         setButtonDisabled(value.download_id);
     });
 
+    /**************************************************************************************************************************************************************************/
+    // Functions
+    /**************************************************************************************************************************************************************************/
+
 
     /******************************************************************************/
     // Set cart divs
@@ -40,10 +44,103 @@ jQuery( document ).ready(function() {
     }
 
     /******************************************************************************/
+    // HTML Structure for every product added to cart
+    /*****************************************************************************/
+
+    function getCartHTML(value){
+        var htmlStructure;
+        var sammelpreis = parseFloat(value.produkt_preis) * parseInt(value.counter);
+        htmlStructure  = '<li class="cartProduct">';
+        htmlStructure += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ')' +  ' </h4>';
+        htmlStructure += '   <span class="cartProductProperty">'  + value.produkt_eigenschaft + ' </span>';
+        htmlStructure += '   <div class="btnWrapper">';
+        htmlStructure += '       <input id="deleteID-'+ value.produkt_id + '-' + value.produkt_eigenschaft + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
+        htmlStructure += '       <button data-produktid="' + value.produkt_id + '" data-produkteigenschaft="' + value.produkt_eigenschaft + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-trash"></i></button>';
+        htmlStructure += '       <button data-produktid="' + value.produkt_id + '" data-produkteigenschaft="' + value.produkt_eigenschaft + '" class="btnRefreshCart btn btn-success"><i class="fa fa-sync-alt"></i></button>';
+        htmlStructure += '   </div>';
+        htmlStructure += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis_mit_steuer).toFixed(2) + params.currency + '</p>';
+        htmlStructure += '   <p><strong>Summe: </strong>' + parseFloat(value.produkt_total).toFixed(2) + params.currency + '</p>';
+        //html += '   <p><strong>Summe: </strong>' + parseFloat(sammelpreis).toFixed(2) + ' EUR</p>';
+        htmlStructure += '</li>';
+
+        return htmlStructure;
+
+    };
+
+    /******************************************************************************/
+    // Cart refresh message
+    /*****************************************************************************/
+
+    function refreshMessage(){
+        jQuery('<p class="cartRefreshed">Warenkorb aktualisiert</p>').hide().prependTo('.submitForm').fadeIn(1000);
+        jQuery([document.documentElement, document.body]).animate({
+            scrollTop: jQuery(".submitForm").offset().top
+        }, 500);
+
+        setTimeout(function(){
+            jQuery('.cartRefreshed').fadeOut(1000);
+            //jQuery('.cartRefreshed').remove();
+        },2000);
+        alert('refreshed');
+    }
+
+
+
+    /******************************************************************************/
+    // Refresh product price on property change
+    /*****************************************************************************/
+
+    function refreshProductPrice(produktID, eigenschaft){
+
+        jQuery.ajax({
+            data: { [tokenKiki]: "1", task: "getProductProperties", format: "json", produktID: produktID},
+            success: function(result) {
+
+                var productPrice = parseInt(result.data.produkt_preis);
+                var productTax = parseInt(result.data.produkt_steuer);
+
+                //alert(productPrice);
+
+                jQuery.each( result.data.produkt_eigenschaften, function( key, value ) {
+                    if(key == eigenschaft){
+                        priceDiv = jQuery('.productPrice' + produktID);
+                        taxDiv = jQuery('.taxValue' + produktID);
+                        price = parseInt(productPrice) + parseInt(value);
+                        tester = parseInt(productTax);
+                        priceTax = price * (parseFloat(productTax/100));
+                        priceWithTax = price + priceTax;
+                        priceDiv.text(priceWithTax.toFixed(2) + ' ' + params.currency);
+
+                    }
+
+                });
+            },
+            error: function(e) {
+                console.log(e);
+                console.log('ajax call failed');
+            }
+        });
+
+    }
+
+    /**************************************************************************************************************************************************************************/
+    // Logic
+    /**************************************************************************************************************************************************************************/
+
+    /******************************************************************************/
+    // Change product price on property change
+    /*****************************************************************************/
+
+    jQuery('select').on('change',function(){
+        var eigenschaft = jQuery(this).val();
+        var id = jQuery(this).next( "button" ).attr('data-produktid');
+        refreshProductPrice(id, eigenschaft);
+    });
+
+    /******************************************************************************/
     // Validate formfields guest
     // Disbale button when fields not filled
     /*****************************************************************************/
-
 
     jQuery(".submitCart").click(function(e) {
         notValid = jQuery(this).hasClass('disabled');
@@ -118,85 +215,12 @@ jQuery( document ).ready(function() {
     });
 
     /******************************************************************************/
-    // HTML Structure for every product added to cart
-    /*****************************************************************************/
-
-    function getCartHTML(value){
-         var htmlStructure;
-        var sammelpreis = parseFloat(value.produkt_preis) * parseInt(value.counter);
-        htmlStructure  = '<li class="cartProduct">';
-        htmlStructure += '   <h4 class="cartProductTitle">' + value.produkt_titel + '( ' + value.counter  + ')' +  ' </h4>';
-        htmlStructure += '   <span class="cartProductProperty">'  + value.produkt_eigenschaft + ' </span>';
-        htmlStructure += '   <div class="btnWrapper">';
-        htmlStructure += '       <input id="deleteID-'+ value.produkt_id + '-' + value.produkt_eigenschaft + '" class="deleteProduct" name="deleteProduct" value="' + value.counter + '">';
-        htmlStructure += '       <button data-produktid="' + value.produkt_id + '" data-produkteigenschaft="' + value.produkt_eigenschaft + '" class="btnDeleteCart btn btn-danger"><i class="fa fa-sync-alt"></i></button>';
-        htmlStructure += '   </div>';
-        htmlStructure += '   <p><strong>Einzelpreis: </strong>' + parseFloat(value.produkt_preis_mit_steuer).toFixed(2) + params.currency + '</p>';
-        htmlStructure += '   <p><strong>Summe: </strong>' + parseFloat(value.produkt_total).toFixed(2) + params.currency + '</p>';
-        //html += '   <p><strong>Summe: </strong>' + parseFloat(sammelpreis).toFixed(2) + ' EUR</p>';
-        htmlStructure += '</li>';
-
-        return htmlStructure;
-
-    };
-
-    /******************************************************************************/
-    // Refrserh product price on property change
-    /*****************************************************************************/
-
-    function refreshProductPrice(produktID, eigenschaft){
-
-        jQuery.ajax({
-            data: { [tokenKiki]: "1", task: "getProductProperties", format: "json", produktID: produktID},
-            success: function(result) {
-
-                var productPrice = parseInt(result.data.produkt_preis);
-                var productTax = parseInt(result.data.produkt_steuer);
-
-                //alert(productPrice);
-
-                jQuery.each( result.data.produkt_eigenschaften, function( key, value ) {
-                    if(key == eigenschaft){
-                        priceDiv = jQuery('.productPrice' + produktID);
-                        taxDiv = jQuery('.taxValue' + produktID);
-                        price = parseInt(productPrice) + parseInt(value);
-                        tester = parseInt(productTax);
-                        priceTax = price * (parseFloat(productTax/100));
-                        priceWithTax = price + priceTax;
-                        priceDiv.text(priceWithTax.toFixed(2) + ' ' + params.currency);
-
-                    }
-
-                });
-            },
-            error: function(e) {
-                console.log(e);
-                console.log('ajax call failed');
-            }
-        });
-
-    }
-
-    jQuery('select').on('change',function(){
-        var eigenschaft = jQuery(this).val();
-        var id = jQuery(this).next( "button" ).attr('data-produktid');
-        refreshProductPrice(id, eigenschaft);
-    });
-
-    /******************************************************************************/
     // Add product to cart
     /*****************************************************************************/
 
 
     jQuery('.btnAddProduct').bind('click', function(event) {
-        jQuery('<p class="productAdded">Produkt zum Warenkorb hinzugefügt</p>').hide().appendTo('.submitForm').fadeIn(1000);
-        jQuery([document.documentElement, document.body]).animate({
-            scrollTop: jQuery(".submitForm").offset().top
-        }, 500);
-
-        setTimeout(function(){
-            jQuery('.productAdded').fadeOut(1000);
-        },2000);
+        refreshMessage();
 
         // default preventen
         event.preventDefault();
@@ -262,17 +286,9 @@ jQuery( document ).ready(function() {
     // Refresh cart
     /*****************************************************************************/
 
-    jQuery('.btnDeleteCart').live('click', function(event) {
+    jQuery('.btnRefreshCart').live('click', function(event) {
 
-
-        jQuery('<p class="cartRefreshed">Warenkorb aktualisiert</p>').hide().appendTo('.submitForm').fadeIn(1000);
-        jQuery([document.documentElement, document.body]).animate({
-            scrollTop: jQuery(".submitForm").offset().top
-        }, 500);
-
-        setTimeout(function(){
-            jQuery('.cartRefreshed').fadeOut(1000);
-        },2000);
+        refreshMessage();
 
         // default preventen
         event.preventDefault();
@@ -334,7 +350,73 @@ jQuery( document ).ready(function() {
 
     });
 
+    /******************************************************************************/
+    // Remove Product from card cart
+    /*****************************************************************************/
 
+    jQuery('.btnDeleteCart').live('click', function(event) {
+
+        refreshMessage();
+
+        // default preventen
+        event.preventDefault();
+
+        // button auslesen aus event
+        var $button = jQuery(event.target).closest('button');
+
+
+        // wenn nicht valide direkt returnen
+        if(!$button) return;
+
+        // auslesen infos
+        var produktID = $button.data('produktid');
+        var produktEigenschaft = $button.data('produkteigenschaft');
+        var quantity = jQuery('#deleteID-' + produktID + '-' + produktEigenschaft).val();
+        //alert(produktEigenschaft);
+
+        var token = jQuery("#token").attr("name");
+
+        jQuery.ajax({
+            data: { [token]: "1", task: "ajaxRemoveProduct", format: "json", produktID: produktID, quantity: quantity, produktEigenschaft: produktEigenschaft},
+            success: function(result) {
+                $button.find('span').text($button.data('messageremove'));
+
+                var tokenKiki = jQuery("#token").attr("name");
+
+                jQuery.ajax({
+                    data: { [tokenKiki]: "1", task: "showUserCart", format: "json"},
+                    success: function(result) {
+
+                        addOrRemoveCart(result.data.length);
+
+                        var gesamtsummeCart = 0;
+                        var html = '<h3>Warenkorb</h3><ul class="cartlist">';
+                        jQuery.each( result.data, function( key, value ) {
+                            html += getCartHTML(value);
+                        });
+
+                        html += '<li>';
+                        html += '<p><strong>Warenkorb Gesamt: </strong>' + parseFloat(gesamtsummeCart).toFixed(2) + ' EUR</p>';
+                        html += '</li>';
+                        html += '</ul>';
+                        jQuery('#cart').html(html);
+
+                    },
+                    error: function(e) {
+                        console.log(e);
+                        console.log('ajax call failed');
+                    }
+                });
+
+                console.log($button);
+            },
+            error: function(e) {
+                console.log(e);
+                console.log('ajax call failed');
+            }
+        });
+
+    });
 
 });
 
